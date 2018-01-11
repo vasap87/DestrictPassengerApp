@@ -1,13 +1,56 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="ru.alexandrkotovfrombutovo.destrictpassengerapp.fragments.NewRouteFragment">
+    android:paddingLeft="5dp"
+    android:paddingRight="5dp"
+    android:orientation="vertical"
+    tools:context="ru.alexandrkotovfrombutovo.destrictpassengerapp.fragments.RouteFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+
+    <EditText
+        android:id="@+id/fromRouteText"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/newRoute_fragment" />
+        android:layout_height="wrap_content"
+        android:hint="@string/from" />
+    <EditText
+        android:id="@+id/toRouteText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/to"/>
+    <EditText
+        android:id="@+id/timePicker"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/timePickerStr"/>
+    <CheckBox
+        android:id="@+id/isDone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/isDoneStr"/>
 
-</FrameLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="right"
+        android:orientation="horizontal"
+        >
+
+        <Button
+            android:id="@+id/cancelButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cancelButtonStr"
+            android:textAlignment="center" />
+
+        <Button
+            android:id="@+id/saveButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/saveButtonStr"
+            android:textAlignment="center" />
+
+
+    </LinearLayout>
+
+</LinearLayout>

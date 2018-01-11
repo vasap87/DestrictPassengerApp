@@ -11,10 +11,16 @@
     <string name="drawer_open">drawer_open</string>
     <string name="drawer_close">drawer_close</string>
     <string name="action_sharing">action sharing</string>
+    <string name="from">From</string>
+    <string name="to">To</string>
+    <string name="isDoneStr">Done</string>
+    <string name="saveButtonStr">Save</string>
+    <string name="cancelButtonStr">Cancel</string>
+    <string name="addNewRouteStr">New route</string>
+    <string name="timePickerStr">enter time</string>
 
     <string-array name="main_items">
         <item>Главная</item>
-        <item>Создать</item>
         <item>Поиск</item>
         <item>Помощь</item>
     </string-array>
