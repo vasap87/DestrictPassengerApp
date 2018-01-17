@@ -18,6 +18,8 @@
     <string name="cancelButtonStr">Cancel</string>
     <string name="addNewRouteStr">New route</string>
     <string name="timePickerStr">enter time</string>
+    <string name="route_item_from">From:</string>
+    <string name="route_item_to">to:</string>
 
     <string-array name="main_items">
         <item>Главная</item>

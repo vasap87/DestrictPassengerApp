@@ -2,11 +2,13 @@ package ru.alexandrkotovfrombutovo.destrictpassengerapp.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.io.Serializable;
+
 /**
  * Created by alexkotov on 09.01.18.
  */
 
-public class Route {
+public class Route{
     @JsonProperty("id")
     private Long id;
     @JsonProperty("userUuid")
@@ -19,6 +21,16 @@ public class Route {
     private String startDate;
     @JsonProperty("isActive")
     private Boolean isActive;
+    @JsonProperty("isDriver")
+    private Boolean isDriver;
+
+    public Boolean getDriver() {
+        return isDriver;
+    }
+
+    public void setDriver(Boolean driver) {
+        isDriver = driver;
+    }
 
     public Long getId() {
         return id;
