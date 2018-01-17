@@ -20,6 +20,8 @@
     <string name="timePickerStr">enter time</string>
     <string name="route_item_from">From:</string>
     <string name="route_item_to">to:</string>
+    <string name="imageDriverOrPedestrian">driver or pede img</string>
+    <string name="settings">Settings</string>
 
     <string-array name="main_items">
         <item>Главная</item>
