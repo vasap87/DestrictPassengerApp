@@ -23,9 +23,16 @@ import ru.alexandrkotovfrombutovo.destrictpassengerapp.models.Route;
 public class RouteAdapter extends ArrayAdapter<Route> {
     private Context context;
 
-    public RouteAdapter(@NonNull Context context, @NonNull List<Route> objects) {
-        super(context, R.layout.route_item, objects);
+    public RouteAdapter(@NonNull Context context) {
+        super(context, R.layout.route_item);
         this.context = context;
+    }
+
+    public void setData(List<Route> data){
+        clear();
+        if(data!=null){
+            addAll(data);
+        }
     }
 
     @NonNull

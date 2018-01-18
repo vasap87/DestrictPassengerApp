@@ -2,8 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:paddingLeft="5dp"
-    android:paddingRight="5dp"
+    android:paddingLeft="16dp"
+    android:paddingRight="16dp"
     android:orientation="vertical"
     tools:context="ru.alexandrkotovfrombutovo.destrictpassengerapp.fragments.RouteFragment">
 
@@ -18,15 +18,16 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/to"/>
-    <EditText
-        android:id="@+id/timePicker"
+    <Spinner
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:hint="@string/timePickerStr"/>
+        android:id="@+id/durationSpinner"
+        />
     <CheckBox
         android:id="@+id/isDone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="16dp"
         android:text="@string/isDoneStr"/>
 
 
@@ -34,49 +35,54 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
+        android:padding="16dp"
         android:gravity="center">
 
         <ImageView
-            android:id="@+id/pedestrianImage"
+            android:id="@+id/userTypeImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:src="@drawable/ic_directions_run"/>
 
+        <TextView
+            android:id="@+id/switchLabelTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:textAlignment="center"
+            android:text="@string/switchLabelPedestrian"/>
+
         <Switch
             android:id="@+id/switchButton"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
             />
-
-        <ImageView
-            android:id="@+id/carDriverImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_drive_eta"/>
 
     </LinearLayout>
 
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:gravity="right"
+        android:layout_gravity="right"
         android:orientation="horizontal"
         >
 
         <Button
             android:id="@+id/cancelButton"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/cancelButtonStr"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:layout_weight="1"/>
 
         <Button
             android:id="@+id/saveButton"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="@string/saveButtonStr"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:layout_weight="1"/>
 
 
     </LinearLayout>

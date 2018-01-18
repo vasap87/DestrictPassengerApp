@@ -22,10 +22,22 @@
     <string name="route_item_to">to:</string>
     <string name="imageDriverOrPedestrian">driver or pede img</string>
     <string name="settings">Settings</string>
+    <string name="noDataInList">No data</string>
+    <string name="switchLabel">switch</string>
+    <string name="enterDate">Enter date</string>
+    <string name="enterTime">Enter time</string>
+    <string name="editDateTimeDialogTitle">Edit date and time</string>
+    <string name="switchLabelPedestrian">Pedestrian</string>
+    <string name="switchLabelCarDriver">Car driver</string>
 
-    <string-array name="main_items">
-        <item>Главная</item>
-        <item>Поиск</item>
-        <item>Помощь</item>
+
+    <string-array name="duration_items">
+        <item>5 min</item>
+        <item>10 min</item>
+        <item>15 min</item>
+        <item>20 min</item>
+        <item>30 min</item>
+        <item>45 min</item>
+        <item>Input time</item>
     </string-array>
 </resources>

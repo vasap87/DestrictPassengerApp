@@ -4,8 +4,10 @@ package ru.alexandrkotovfrombutovo.destrictpassengerapp.fragments;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.ListFragment;
+import android.app.LoaderManager;
 import android.content.Context;
 import android.content.Intent;
+import android.content.Loader;
 import android.content.res.Configuration;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -17,10 +19,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.concurrent.ExecutionException;
 
 import ru.alexandrkotovfrombutovo.destrictpassengerapp.R;
@@ -33,10 +37,11 @@ import ru.alexandrkotovfrombutovo.destrictpassengerapp.utils.OnAddRouteListener;
 /**
  * A simple {@link Fragment} subclass.
  */
-public class RouteListFragment extends ListFragment implements OnAddRouteListener {
+public class RouteListFragment extends ListFragment implements OnAddRouteListener, LoaderManager.LoaderCallbacks<List<Route>> {
 
     private static final String TAG = "RouteListFragment";
 
+    private ProgressBar progressBar;
     private ArrayList<Route> routes;
     private RouteAdapter adapter;
     @Override
@@ -54,6 +59,8 @@ public class RouteListFragment extends ListFragment implements OnAddRouteListene
             newRouteFragment.setTargetFragment(this, 1);
             newRouteFragment.show(getFragmentManager(), "newRouteFragment");
         });
+
+
 
     }
 
@@ -75,9 +82,11 @@ public class RouteListFragment extends ListFragment implements OnAddRouteListene
         Log.i(TAG,"onActivityCreated");
         super.onActivityCreated(savedInstanceState);
         routes = new ArrayList<Route>();
-        adapter = new RouteAdapter(getActivity(), routes);
+        setEmptyText(getResources().getText(R.string.noDataInList));
+        adapter = new RouteAdapter(getActivity());
         setListAdapter(adapter);
-        fillList();
+        setListShown(false);
+        getLoaderManager().initLoader(0,null, this);
     }
 
 
@@ -89,67 +98,30 @@ public class RouteListFragment extends ListFragment implements OnAddRouteListene
 
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        Log.i(TAG,"onCreateView");
-        return super.onCreateView(inflater, container, savedInstanceState);
-    }
-
-
-    @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        Log.i(TAG,"onCreate");
-        super.onCreate(savedInstanceState);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        Log.i(TAG,"onSaveInstanceState");
-        super.onSaveInstanceState(outState);
-    }
-
-    @Override
-    public void onConfigurationChanged(Configuration newConfig) {
-        Log.i(TAG,"onConfigurationChanged");
-        super.onConfigurationChanged(newConfig);
-    }
-
-
-    private void fillList(){
-        GetRouteListTask task = new GetRouteListTask();
-        task.execute();
-        try {
-            Route [] routesArr = task.get().getBody();
-            routes.clear();
-            adapter.notifyDataSetChanged();
-            Collections.addAll(routes, routesArr);
-            adapter.notifyDataSetChanged();
-            getListView().requestLayout();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-        } catch (NullPointerException e){
-            Toast.makeText(getActivity(), "Network problem :(", Toast.LENGTH_LONG).show();
-            fillTestData();
-        }
-    }
-
-    private void fillTestData() {
-        for (int i = 0; i < 20; i++) {
-            Route route = new Route();
-            route.setDriver(i%2==0);
-            route.setActive(true);
-            route.setFromRoute("From "+ TAG + " "+i);
-            route.setToRoute("To "+ TAG + " "+i);
-            route.setStartDate((++i)+" min");
-            routes.add(route);
-        }
-        adapter.notifyDataSetChanged();
-    }
-
-    @Override
     public void onAddRouteListener(Route route) {
         Log.i(TAG,"onAddRouteListener");
-        fillList();
+        getLoaderManager().restartLoader(0,null,this);
+    }
+
+    @Override
+    public Loader<List<Route>> onCreateLoader(int id, Bundle args) {
+        Log.i(TAG, "onCreateLoader called.");
+        return new GetRouteListTask(getActivity());
+    }
+
+    @Override
+    public void onLoadFinished(Loader<List<Route>> loader, List<Route> data) {
+        Log.i(TAG, "onLoadFinished called. data length: " + (data!=null?data.size():"0"));
+        adapter.setData(data);
+        if(isResumed()){
+            setListShown(true);
+        }else {
+            setListShownNoAnimation(true);
+        }
+    }
+
+    @Override
+    public void onLoaderReset(Loader<List<Route>> loader) {
+        adapter.setData(null);
     }
 }
