@@ -50,7 +50,7 @@ public class RouteAdapter extends ArrayAdapter<Route> {
         ImageView image = (ImageView) row.findViewById(R.id.imageRoute);
         fromText.setText(route.getFromRoute().isEmpty() ? " " : route.getFromRoute());
         toText.setText(route.getToRoute().isEmpty() ? " " : route.getToRoute());
-        timeToStart.setText(route.getStartDate().isEmpty() ? " " : route.getStartDate());
+        timeToStart.setText((route.getStartDateTime()==null) ? " " : route.getStartDateTime().toString());
         if (route.getDriver()) {
             image.setImageResource(R.drawable.ic_drive_eta);
         } else {

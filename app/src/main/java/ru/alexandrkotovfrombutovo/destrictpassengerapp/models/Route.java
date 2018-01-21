@@ -2,8 +2,6 @@ package ru.alexandrkotovfrombutovo.destrictpassengerapp.models;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.io.Serializable;
-
 /**
  * Created by alexkotov on 09.01.18.
  */
@@ -17,8 +15,8 @@ public class Route{
     private String fromRoute;
     @JsonProperty("toRoute")
     private String toRoute;
-    @JsonProperty("startDate")
-    private String startDate;
+    @JsonProperty("startDateTime")
+    private Long startDateTime;
     @JsonProperty("isActive")
     private Boolean isActive;
     @JsonProperty("isDriver")
@@ -64,12 +62,12 @@ public class Route{
         this.toRoute = toRoute;
     }
 
-    public String getStartDate() {
-        return startDate;
+    public Long getStartDateTime() {
+        return startDateTime;
     }
 
-    public void setStartDate(String startDate) {
-        this.startDate = startDate;
+    public void setStartDateTime(Long startDateTime) {
+        this.startDateTime = startDateTime;
     }
 
     public Boolean getActive() {

@@ -32,7 +32,7 @@ public class GetRouteListTask extends AsyncTaskLoader<List<Route>> {
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
         try {
-            responseEntity = restTemplate.getForEntity("http://172.31.11.110:8080/routes/all", Route[].class);
+            responseEntity = restTemplate.getForEntity("http://192.168.122.1:8080/routes/all", Route[].class);
             routes = Arrays.asList(responseEntity.getBody());
         }
         catch (Exception e){

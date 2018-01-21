@@ -17,7 +17,7 @@
     <string name="saveButtonStr">Save</string>
     <string name="cancelButtonStr">Cancel</string>
     <string name="addNewRouteStr">New route</string>
-    <string name="timePickerStr">enter time</string>
+    <string name="timePickerStr">When</string>
     <string name="route_item_from">From:</string>
     <string name="route_item_to">to:</string>
     <string name="imageDriverOrPedestrian">driver or pede img</string>

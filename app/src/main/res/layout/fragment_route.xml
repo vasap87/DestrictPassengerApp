@@ -18,11 +18,13 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:hint="@string/to"/>
-    <Spinner
+    <EditText
+        android:id="@+id/setDateTimeText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/durationSpinner"
-        />
+        android:inputType="none"
+        android:focusable="false"
+        android:hint="@string/timePickerStr"/>
     <CheckBox
         android:id="@+id/isDone"
         android:layout_width="match_parent"
@@ -44,18 +46,13 @@
             android:layout_height="wrap_content"
             android:src="@drawable/ic_directions_run"/>
 
-        <TextView
-            android:id="@+id/switchLabelTextView"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:textAlignment="center"
-            android:text="@string/switchLabelPedestrian"/>
 
         <Switch
             android:id="@+id/switchButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:text="@string/switchLabelPedestrian"
             />
 
     </LinearLayout>
