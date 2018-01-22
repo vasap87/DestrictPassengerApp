@@ -16,7 +16,7 @@
     <string name="isDoneStr">Done</string>
     <string name="saveButtonStr">Save</string>
     <string name="cancelButtonStr">Cancel</string>
-    <string name="addNewRouteStr">New route</string>
+    <string name="addNewRouteStr">New mRoute</string>
     <string name="timePickerStr">When</string>
     <string name="route_item_from">From:</string>
     <string name="route_item_to">to:</string>
@@ -29,6 +29,7 @@
     <string name="editDateTimeDialogTitle">Edit date and time</string>
     <string name="switchLabelPedestrian">Pedestrian</string>
     <string name="switchLabelCarDriver">Car driver</string>
+    <string name="minuteLeter">min</string>
 
 
     <string-array name="duration_items">

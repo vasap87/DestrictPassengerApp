@@ -17,7 +17,6 @@ import android.widget.Toast;
 
 import org.springframework.http.ResponseEntity;
 
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.UUID;
@@ -40,19 +39,19 @@ public class RouteFragment extends DialogFragment implements View.OnClickListene
     }
 
     public static final String TAG = "RouteDialogFragment";
-    private EditText fromRoute;
-    private EditText toRoute;
-    private EditText dateTimeEditText;
-    private CheckBox isDoneChB;
-    private Switch switchDriver;
-    private ImageView imageView;
+    private EditText mFromRoute;
+    private EditText mToRoute;
+    private EditText mDateTimeEditText;
+    private CheckBox mIsDoneChB;
+    private Switch mSwitchDriver;
+    private ImageView mImageView;
     private Calendar mCalendar;
 
-    private Route route;
+    private Route mRoute;
 
     private OnAddRouteListener targetListener;
-    public void setRoute(Route route) {
-        this.route = route;
+    public void setRoute(Route mRoute) {
+        this.mRoute = mRoute;
     }
 
     @Override
@@ -86,23 +85,23 @@ public class RouteFragment extends DialogFragment implements View.OnClickListene
             Button cancelButton = view.findViewById(R.id.cancelButton);
             saveButton.setOnClickListener(this);
             cancelButton.setOnClickListener(this);
-            fromRoute = view.findViewById(R.id.fromRouteText);
-            toRoute = view.findViewById(R.id.toRouteText);
-            dateTimeEditText = view.findViewById(R.id.setDateTimeText);
-            isDoneChB = view.findViewById(R.id.isDone);
-            switchDriver = view.findViewById(R.id.switchButton);
-            imageView = view.findViewById(R.id.userTypeImage);
-            if(route!=null){
-                fromRoute.setText(route.getFromRoute());
-                toRoute.setText(route.getToRoute());
-                mCalendar.setTimeInMillis(route.getStartDateTime());
-                dateTimeEditText.setText(new SimpleDateFormat("dd:MM:yyyy HH:mm").format(mCalendar.getTime()));
-                isDoneChB.setChecked(!route.getActive());
-                switchDriver.setChecked(route.getDriver());
-                switchHelper(switchDriver.isChecked());
+            mFromRoute = view.findViewById(R.id.fromRouteText);
+            mToRoute = view.findViewById(R.id.toRouteText);
+            mDateTimeEditText = view.findViewById(R.id.setDateTimeText);
+            mIsDoneChB = view.findViewById(R.id.isDone);
+            mSwitchDriver = view.findViewById(R.id.switchButton);
+            mImageView = view.findViewById(R.id.userTypeImage);
+            if(mRoute !=null){
+                mFromRoute.setText(mRoute.getFromRoute());
+                mToRoute.setText(mRoute.getToRoute());
+                mCalendar.setTimeInMillis(mRoute.getStartDateTime());
+                mDateTimeEditText.setText(new SimpleDateFormat("dd:MM:yyyy HH:mm").format(mCalendar.getTime()));
+                mIsDoneChB.setChecked(!mRoute.getActive());
+                mSwitchDriver.setChecked(mRoute.getDriver());
+                switchHelper(mSwitchDriver.isChecked());
             }
-            dateTimeEditText.setOnClickListener(this);
-            switchDriver.setOnClickListener(this);
+            mDateTimeEditText.setOnClickListener(this);
+            mSwitchDriver.setOnClickListener(this);
         }
     }
 
@@ -111,17 +110,17 @@ public class RouteFragment extends DialogFragment implements View.OnClickListene
 
         switch (v.getId()) {
             case R.id.saveButton: {
-                if(route==null) {
-                    route = new Route();
+                if(mRoute ==null) {
+                    mRoute = new Route();
                 }
-                route.setActive(!isDoneChB.isChecked());
-                route.setFromRoute(String.valueOf(fromRoute.getText()));
-                route.setToRoute(String.valueOf(toRoute.getText()));
-                if (route.getUserUuid() == null ) route.setUserUuid(UUID.randomUUID().toString());
-                route.setStartDateTime(mCalendar.getTimeInMillis());
-                route.setDriver(switchDriver.isChecked());
+                mRoute.setActive(!mIsDoneChB.isChecked());
+                mRoute.setFromRoute(String.valueOf(mFromRoute.getText()));
+                mRoute.setToRoute(String.valueOf(mToRoute.getText()));
+                if (mRoute.getUserUuid() == null ) mRoute.setUserUuid(UUID.randomUUID().toString());
+                mRoute.setStartDateTime(mCalendar.getTimeInMillis());
+                mRoute.setDriver(mSwitchDriver.isChecked());
                 PostRouteTask task = new PostRouteTask();
-                task.execute(route);
+                task.execute(mRoute);
                 try {
                     ResponseEntity<Route> routeResponseEntity = task.get();
                     if (routeResponseEntity != null) {
@@ -146,12 +145,12 @@ public class RouteFragment extends DialogFragment implements View.OnClickListene
                 break;
             }
             case R.id.switchButton:{
-                switchHelper(switchDriver.isChecked());
+                switchHelper(mSwitchDriver.isChecked());
                 break;
             }
             case R.id.setDateTimeText:{
-                DateTimeEditDialogFragment dateTimeEditDialogFragment = new DateTimeEditDialogFragment(Calendar.getInstance().getTimeInMillis());
-                dateTimeEditDialogFragment.setTargetFragment(getFragmentManager().findFragmentByTag("newRouteFragment"), 0);
+                DateTimeEditDialogFragment dateTimeEditDialogFragment = new DateTimeEditDialogFragment(mCalendar);
+                dateTimeEditDialogFragment.setTargetFragment(this, 0);
                 dateTimeEditDialogFragment.show(getFragmentManager(),"dateTimeDialogFragment");
                 break;
             }
@@ -162,16 +161,16 @@ public class RouteFragment extends DialogFragment implements View.OnClickListene
     @Override
     public void onDateTimeChange(Calendar calendar) {
         mCalendar = calendar;
-        dateTimeEditText.setText(new SimpleDateFormat("dd:MM:yyyy HH:mm").format(mCalendar.getTime()));
+        mDateTimeEditText.setText(new SimpleDateFormat("dd:MM:yyyy HH:mm").format(mCalendar.getTime()));
     }
 
     private void switchHelper(boolean selected){
         if(selected){
-            imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_drive_eta, getActivity().getTheme()));
-            switchDriver.setText(getResources().getText(R.string.switchLabelCarDriver));
+            mImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_drive_eta, getActivity().getTheme()));
+            mSwitchDriver.setText(getResources().getText(R.string.switchLabelCarDriver));
         }else{
-            imageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_directions_run, getActivity().getTheme()));
-            switchDriver.setText(getResources().getText(R.string.switchLabelPedestrian));
+            mImageView.setImageDrawable(getResources().getDrawable(R.drawable.ic_directions_run, getActivity().getTheme()));
+            mSwitchDriver.setText(getResources().getText(R.string.switchLabelPedestrian));
         }
     }
 }

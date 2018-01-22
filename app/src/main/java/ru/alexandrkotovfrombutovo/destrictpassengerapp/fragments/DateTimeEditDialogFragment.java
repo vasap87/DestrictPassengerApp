@@ -6,6 +6,7 @@ import android.app.DialogFragment;
 import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,7 @@ import ru.alexandrkotovfrombutovo.destrictpassengerapp.utils.OnDateTimeChangeLis
 @SuppressLint("ValidFragment")
 public class DateTimeEditDialogFragment extends DialogFragment implements View.OnClickListener{
 
+    private static final String TAG = "DTEditDialogFragment";
     private OnDateTimeChangeListener mListener;
     private EditText mDateText;
     private EditText mTimeText;
@@ -33,9 +35,8 @@ public class DateTimeEditDialogFragment extends DialogFragment implements View.O
 
 
     @SuppressLint("ValidFragment")
-    public DateTimeEditDialogFragment(Long selectedDateTime) {
-        mCalendar = Calendar.getInstance();
-        mCalendar.setTimeInMillis(selectedDateTime);
+    public DateTimeEditDialogFragment(Calendar calendar) {
+        mCalendar = calendar;
     }
 
     public DateTimeEditDialogFragment (){
@@ -66,6 +67,7 @@ public class DateTimeEditDialogFragment extends DialogFragment implements View.O
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.i(TAG,"onCreate");
         super.onCreate(savedInstanceState);
         try {
             mListener = (OnDateTimeChangeListener) getTargetFragment();
