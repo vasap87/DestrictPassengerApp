@@ -112,7 +112,7 @@ public class DateTimeEditDialogFragment extends DialogFragment implements View.O
         setDateInEditText();
     };
 
-    private TimePickerDialog.OnTimeSetListener timeSetListener = (view, hourOfDay, minute) -> {
+    private TimePickerDialog.OnTimeSetListener timeSetListener = (timePicker, hourOfDay, minute) -> {
         mCalendar.set(Calendar.HOUR,hourOfDay);
         mCalendar.set(Calendar.MINUTE,minute);
         setTimeInEditText();

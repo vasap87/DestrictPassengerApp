@@ -9,10 +9,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Filter;
+import android.widget.Filterable;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.Comparator;
+import java.util.ArrayList;
 import java.util.List;
 
 import ru.alexandrkotovfrombutovo.destrictpassengerapp.R;
@@ -22,18 +24,21 @@ import ru.alexandrkotovfrombutovo.destrictpassengerapp.models.Route;
  * Created by alexkotov on 15.01.18.
  */
 
-public class RouteAdapter extends ArrayAdapter<Route> {
-    private Context context;
+public class RouteAdapter extends ArrayAdapter<Route> implements Filterable {
+    private Context mContext;
+    private RouteFilter mRouteFilter;
+    private List<Route> mRoutes;
     public static final String TAG = "RouteAdapter";
 
     public RouteAdapter(@NonNull Context context) {
         super(context, R.layout.route_item);
-        this.context = context;
+        this.mContext = context;
     }
 
     public void setData(List<Route> data){
         clear();
         if(data!=null){
+            mRoutes = data;
             addAll(data);
         }
     }
@@ -44,7 +49,7 @@ public class RouteAdapter extends ArrayAdapter<Route> {
         Log.i(TAG, "getView, position = " + position);
         Route route = getItem(position);
 
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         @SuppressLint("ViewHolder") View row = inflater.inflate(R.layout.route_item, parent, false);
 
@@ -66,7 +71,7 @@ public class RouteAdapter extends ArrayAdapter<Route> {
     @NonNull
     private CharSequence getTimeToStart(Long startDateTime) {
         Log.i(TAG,"Method: getTimeToStart, param startDateTime = "+ startDateTime);
-        String minuteLetter = context.getResources().getString(R.string.minuteLeter);
+        String minuteLetter = mContext.getResources().getString(R.string.minuteLeter);
         Long currentTimeMillis = System.currentTimeMillis();
         Log.i(TAG,"Method: getTimeToStart, currentTimeMillis = "+ currentTimeMillis);
         long timeToStart = startDateTime-currentTimeMillis;
@@ -78,4 +83,39 @@ public class RouteAdapter extends ArrayAdapter<Route> {
         return minutes + " " + minuteLetter;
     }
 
+    @NonNull
+    @Override
+    public Filter getFilter() {
+        if(mRouteFilter ==null){
+            mRouteFilter = new RouteFilter();
+        }
+        return mRouteFilter;
+    }
+
+    private class RouteFilter extends Filter{
+
+        @Override
+        protected FilterResults performFiltering(CharSequence constraint) {
+            FilterResults results = new FilterResults();
+            List<Route> filteredRoutes = new ArrayList<>();
+            if (constraint.toString().equals("mine")){
+
+            }else {
+                long currenTimeMillis = System.currentTimeMillis();
+                for (Route route : mRoutes) {
+                    if((route.getStartDateTime()-currenTimeMillis)/(1000*60) < -5){
+                        filteredRoutes.add(route);
+                    }
+                }
+            }
+            results.count = filteredRoutes.size();
+            results.values = filteredRoutes;
+            return results;
+        }
+
+        @Override
+        protected void publishResults(CharSequence constraint, FilterResults results) {
+            setData((List<Route>) results.values);
+        }
+    }
 }

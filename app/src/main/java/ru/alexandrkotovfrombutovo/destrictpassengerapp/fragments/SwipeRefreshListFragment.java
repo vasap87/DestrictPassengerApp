@@ -40,8 +40,8 @@ public class SwipeRefreshListFragment extends ListFragment {
         mSwipeRefreshLayout.setRefreshing(refreshing);
     }
 
-    public void setColorScheme(int col1, int col2, int con3, int col4){
-        mSwipeRefreshLayout.setColorSchemeResources(col1,col2,con3,col4);
+    public void setColorScheme(int... col){
+        mSwipeRefreshLayout.setColorSchemeResources(col);
     }
 
     public SwipeRefreshLayout getSwipeRefreshLayout() {

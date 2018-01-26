@@ -2,6 +2,8 @@ package ru.alexandrkotovfrombutovo.destrictpassengerapp.fragments;
 
 
 import android.app.DialogFragment;
+import android.app.Fragment;
+import android.app.FragmentManager;
 import android.os.Bundle;
 
 import android.util.Log;
@@ -24,6 +26,7 @@ import java.util.concurrent.ExecutionException;
 
 import ru.alexandrkotovfrombutovo.destrictpassengerapp.R;
 import ru.alexandrkotovfrombutovo.destrictpassengerapp.models.Route;
+import ru.alexandrkotovfrombutovo.destrictpassengerapp.models.UserInfo;
 import ru.alexandrkotovfrombutovo.destrictpassengerapp.utils.OnAddRouteListener;
 import ru.alexandrkotovfrombutovo.destrictpassengerapp.utils.OnDateTimeChangeListener;
 import ru.alexandrkotovfrombutovo.destrictpassengerapp.utils.PostRouteTask;
@@ -31,13 +34,22 @@ import ru.alexandrkotovfrombutovo.destrictpassengerapp.utils.PostRouteTask;
 /**
  * A simple {@link DialogFragment} subclass.
  */
-public class RouteFragment extends DialogFragment implements View.OnClickListener, OnDateTimeChangeListener {
+public class RouteFragment extends Fragment implements View.OnClickListener, OnDateTimeChangeListener {
 
 
     public RouteFragment() {
         // Required empty public constructor
     }
 
+    public static RouteFragment newInstance(UserInfo userInfo){
+        RouteFragment fragment = new RouteFragment();
+        Bundle args = new Bundle();
+        args.putSerializable(USER_TAG, userInfo);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static final String USER_TAG = "CURRENT-USER";
     public static final String TAG = "RouteDialogFragment";
     private EditText mFromRoute;
     private EditText mToRoute;
@@ -46,8 +58,8 @@ public class RouteFragment extends DialogFragment implements View.OnClickListene
     private Switch mSwitchDriver;
     private ImageView mImageView;
     private Calendar mCalendar;
-
     private Route mRoute;
+    private UserInfo mCurrentUser;
 
     private OnAddRouteListener targetListener;
     public void setRoute(Route mRoute) {
@@ -60,6 +72,7 @@ public class RouteFragment extends DialogFragment implements View.OnClickListene
         // Inflate the layout for this fragment
         Log.i(TAG,"onCreateView");
         mCalendar = Calendar.getInstance();
+
         return inflater.inflate(R.layout.fragment_route, container, false);
 
     }
@@ -69,6 +82,8 @@ public class RouteFragment extends DialogFragment implements View.OnClickListene
         Log.i(TAG,"onCreate");
         super.onCreate(savedInstanceState);
         try {
+            Bundle properties = getArguments();
+            mCurrentUser = (UserInfo) properties.getSerializable("CURRENT-USER");
             targetListener = (OnAddRouteListener) getTargetFragment();
         }catch (ClassCastException e){
             throw new ClassCastException("Calling Fragment must implement OnAddFriendListener");
@@ -100,6 +115,7 @@ public class RouteFragment extends DialogFragment implements View.OnClickListene
                 mSwitchDriver.setChecked(mRoute.getDriver());
                 switchHelper(mSwitchDriver.isChecked());
             }
+            // TODO: 26.01.18 replace it
             mDateTimeEditText.setOnClickListener(this);
             mSwitchDriver.setOnClickListener(this);
         }
@@ -116,7 +132,7 @@ public class RouteFragment extends DialogFragment implements View.OnClickListene
                 mRoute.setActive(!mIsDoneChB.isChecked());
                 mRoute.setFromRoute(String.valueOf(mFromRoute.getText()));
                 mRoute.setToRoute(String.valueOf(mToRoute.getText()));
-                if (mRoute.getUserUuid() == null ) mRoute.setUserUuid(UUID.randomUUID().toString());
+                if (mRoute.getUser() == null ) mRoute.setUser(mCurrentUser);
                 mRoute.setStartDateTime(mCalendar.getTimeInMillis());
                 mRoute.setDriver(mSwitchDriver.isChecked());
                 PostRouteTask task = new PostRouteTask();
@@ -137,11 +153,11 @@ public class RouteFragment extends DialogFragment implements View.OnClickListene
                 } catch (ExecutionException e) {
                     Toast.makeText(getActivity(), "Not added: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 }
-                this.dismiss();
+                dismiss(this);
                 break;
             }
             case R.id.cancelButton: {
-                this.dismiss();
+                dismiss(this);
                 break;
             }
             case R.id.switchButton:{
@@ -156,6 +172,15 @@ public class RouteFragment extends DialogFragment implements View.OnClickListene
             }
         }
 
+    }
+
+    private void dismiss(Fragment fragment) {
+
+        FragmentManager fragmentManager = getFragmentManager();
+        Fragment previous = fragment.getTargetFragment();
+        fragmentManager.beginTransaction()
+                .replace(R.id.content_frame, previous)
+                .commit();
     }
 
     @Override

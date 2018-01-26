@@ -2,6 +2,8 @@ package ru.alexandrkotovfrombutovo.destrictpassengerapp.fragments;
 
 
 import android.app.DialogFragment;
+import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.app.ListFragment;
 import android.app.LoaderManager;
 import android.content.Loader;
@@ -9,6 +11,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.Gravity;
@@ -16,11 +19,13 @@ import android.view.View;
 import android.widget.ListView;
 
 import java.util.List;
+import java.util.UUID;
 
 import ru.alexandrkotovfrombutovo.destrictpassengerapp.R;
 import ru.alexandrkotovfrombutovo.destrictpassengerapp.adapter.RouteAdapter;
 import ru.alexandrkotovfrombutovo.destrictpassengerapp.customview.FloatingActionButton;
 import ru.alexandrkotovfrombutovo.destrictpassengerapp.models.Route;
+import ru.alexandrkotovfrombutovo.destrictpassengerapp.models.UserInfo;
 import ru.alexandrkotovfrombutovo.destrictpassengerapp.utils.GetRouteListTask;
 import ru.alexandrkotovfrombutovo.destrictpassengerapp.utils.OnAddRouteListener;
 
@@ -29,9 +34,22 @@ import ru.alexandrkotovfrombutovo.destrictpassengerapp.utils.OnAddRouteListener;
  */
 public class RouteListFragment extends SwipeRefreshListFragment implements OnAddRouteListener, LoaderManager.LoaderCallbacks<List<Route>> {
 
-    private static final String TAG = "RouteListFragment";
+    public static final String TAG = "RouteListFragment";
 
     private RouteAdapter adapter;
+    private UserInfo mCurrentUser;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // TODO: 26.01.18 rewrite initialization mCurrentUser instance
+        mCurrentUser = new UserInfo();
+        mCurrentUser.setUuid(UUID.randomUUID().toString());
+        mCurrentUser.setActive(true);
+        mCurrentUser.setName("user android");
+        mCurrentUser.setPhone("+1(234)5678901");
+
+    }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
@@ -39,14 +57,16 @@ public class RouteListFragment extends SwipeRefreshListFragment implements OnAdd
         super.onViewCreated(view, savedInstanceState);
         FloatingActionButton fabButton = new FloatingActionButton.Builder(getActivity())
                 .withDrawable(getResources().getDrawable(R.drawable.ic_add))
-                .withButtonColor(Color.parseColor("#2f993f"))
+                .withButtonColor(ContextCompat.getColor(getActivity(),R.color.floating_action_button_color))
                 .withGravity(Gravity.BOTTOM | Gravity.RIGHT)
                 .withMargins(0, 0, 16, 16)
                 .create();
         fabButton.setOnClickListener(v -> {
-            DialogFragment newRouteFragment = new RouteFragment();
-            newRouteFragment.setTargetFragment(this, 1);
-            newRouteFragment.show(getFragmentManager(), "newRouteFragment");
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            RouteFragment routeFragment = RouteFragment.newInstance(mCurrentUser);
+            routeFragment.setTargetFragment(this,1);
+            ft.replace(R.id.content_frame, routeFragment)
+                    .commit();
         });
         setEmptyText(getResources().getText(R.string.noDataInList));
         adapter = new RouteAdapter(getActivity());
@@ -54,6 +74,7 @@ public class RouteListFragment extends SwipeRefreshListFragment implements OnAdd
         setListShown(false);
         getLoaderManager().initLoader(0,null, this);
 
+        setColorScheme(R.color.refres_status_color);
         setOnRefreshListener(() -> initRefresh());
     }
 
@@ -66,10 +87,11 @@ public class RouteListFragment extends SwipeRefreshListFragment implements OnAdd
         super.onListItemClick(l, v, position, id);
         Route route = (Route) l.getItemAtPosition(position);
         if(route!=null){
-            RouteFragment fragment = new RouteFragment();
-            fragment.setRoute(route);
-            fragment.setTargetFragment(this, 1);
-            fragment.show(getFragmentManager(), "editRoute");
+            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            RouteFragment routeFragment = RouteFragment.newInstance(mCurrentUser);
+            routeFragment.setRoute(route);
+            ft.replace(R.id.content_frame, routeFragment)
+                    .commit();
         }
     }
 

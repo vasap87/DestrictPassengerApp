@@ -9,8 +9,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Route{
     @JsonProperty("id")
     private Long id;
-    @JsonProperty("userUuid")
-    private String userUuid;
+    @JsonProperty("user")
+    private UserInfo user;
     @JsonProperty("fromRoute")
     private String fromRoute;
     @JsonProperty("toRoute")
@@ -38,12 +38,12 @@ public class Route{
         this.id = id;
     }
 
-    public String getUserUuid() {
-        return userUuid;
+    public UserInfo getUser() {
+        return user;
     }
 
-    public void setUserUuid(String userUuid) {
-        this.userUuid = userUuid;
+    public void setUser(UserInfo user) {
+        this.user = user;
     }
 
     public String getFromRoute() {
