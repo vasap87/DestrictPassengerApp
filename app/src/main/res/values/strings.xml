@@ -30,6 +30,9 @@
     <string name="switchLabelPedestrian">Pedestrian</string>
     <string name="switchLabelCarDriver">Car driver</string>
     <string name="minuteLeter">min</string>
+    <string name="inputPhoneHint">enter phone number</string>
+    <string name="confirmPhoneBtnLabel">confirm</string>
+    <string name="country_code">RU</string>
 
 
     <string-array name="duration_items">

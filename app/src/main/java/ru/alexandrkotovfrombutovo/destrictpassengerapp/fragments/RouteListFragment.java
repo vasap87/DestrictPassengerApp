@@ -42,12 +42,6 @@ public class RouteListFragment extends SwipeRefreshListFragment implements OnAdd
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // TODO: 26.01.18 rewrite initialization mCurrentUser instance
-        mCurrentUser = new UserInfo();
-        mCurrentUser.setUuid(UUID.randomUUID().toString());
-        mCurrentUser.setActive(true);
-        mCurrentUser.setName("user android");
-        mCurrentUser.setPhone("+1(234)5678901");
 
     }
 
@@ -88,7 +82,7 @@ public class RouteListFragment extends SwipeRefreshListFragment implements OnAdd
         Route route = (Route) l.getItemAtPosition(position);
         if(route!=null){
             FragmentTransaction ft = getFragmentManager().beginTransaction();
-            RouteFragment routeFragment = RouteFragment.newInstance(mCurrentUser);
+            RouteFragment routeFragment = new RouteFragment();
             routeFragment.setRoute(route);
             ft.replace(R.id.content_frame, routeFragment)
                     .commit();
@@ -141,4 +135,7 @@ public class RouteListFragment extends SwipeRefreshListFragment implements OnAdd
         adapter.setData(null);
     }
 
+    public void setUserInfo(UserInfo userInfo) {
+        this.mCurrentUser = userInfo;
+    }
 }
