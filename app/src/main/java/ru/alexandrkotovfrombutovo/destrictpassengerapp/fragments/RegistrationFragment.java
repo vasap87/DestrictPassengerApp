@@ -1,10 +1,11 @@
 package ru.alexandrkotovfrombutovo.destrictpassengerapp.fragments;
 
 
+import android.app.Fragment;
 import android.app.FragmentTransaction;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.telephony.PhoneNumberFormattingTextWatcher;
@@ -12,19 +13,19 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
 import java.util.concurrent.ExecutionException;
 
-import ru.alexandrkotovfrombutovo.destrictpassengerapp.activities.MainActivity;
 import ru.alexandrkotovfrombutovo.destrictpassengerapp.R;
+import ru.alexandrkotovfrombutovo.destrictpassengerapp.activities.MainActivity;
 import ru.alexandrkotovfrombutovo.destrictpassengerapp.models.UserInfo;
 import ru.alexandrkotovfrombutovo.destrictpassengerapp.utils.JsonUtil;
 import ru.alexandrkotovfrombutovo.destrictpassengerapp.utils.PostUserInfoTask;
@@ -39,6 +40,7 @@ public class RegistrationFragment extends Fragment {
     private Button mConfirmBtn;
 
     private final String TAG = "RegistrationFragment";
+
     public RegistrationFragment() {
         // Required empty public constructor
     }
@@ -50,7 +52,7 @@ public class RegistrationFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.registration_fragment, container,false);
+        View view = inflater.inflate(R.layout.registration_fragment, container, false);
         return view;
     }
 
@@ -60,6 +62,9 @@ public class RegistrationFragment extends Fragment {
         mPhoneNumberEditText.addTextChangedListener(new PhoneNumberFormattingTextWatcher(getResources().getString(R.string.country_code)));
         mConfirmBtn = view.findViewById(R.id.confirmPhoneButton);
         mConfirmBtn.setOnClickListener(v -> {
+            InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
+
             UserInfo userInfo = new UserInfo();
             userInfo.setUuid(mUserUuid);
             userInfo.setPhone(String.valueOf(mPhoneNumberEditText.getText()));
@@ -67,7 +72,7 @@ public class RegistrationFragment extends Fragment {
             task.execute(userInfo);
             try {
                 ResponseEntity<UserInfo> entityUserInfo = task.get();
-                if(entityUserInfo!=null) {
+                if (entityUserInfo != null) {
                     userInfo = entityUserInfo.getBody();
                     SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
                     SharedPreferences.Editor editor = preferences.edit();
@@ -75,12 +80,12 @@ public class RegistrationFragment extends Fragment {
                     editor.putBoolean(MainActivity.IS_REGISTER_TAG, true);
                     editor.apply();
 
-                    FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                    FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
                     RouteListFragment fragment = new RouteListFragment();
                     fragment.setUserInfo(userInfo);
                     transaction.replace(R.id.content_frame, fragment);
                     transaction.commit();
-                }else {
+                } else {
                     Toast.makeText(getActivity(), "connection timeout", Toast.LENGTH_SHORT).show();
                 }
             } catch (JsonProcessingException e) {
@@ -91,8 +96,6 @@ public class RegistrationFragment extends Fragment {
                 Log.i(TAG, e.getMessage());
             }
 
-            FragmentTransaction transaction = getFragmentManager().beginTransaction();
-            transaction.replace(R.id.content_frame, new Fragment()).commit();
         });
     }
 }

@@ -20,6 +20,7 @@ import ru.alexandrkotovfrombutovo.destrictpassengerapp.models.Route;
 public class GetRouteListTask extends AsyncTaskLoader<List<Route>> {
 
     List<Route> routes;
+    private static final String URL = "http://172.31.11.110:8080/routes/all";
 
     public GetRouteListTask(Context context) {
         super(context);
@@ -32,8 +33,8 @@ public class GetRouteListTask extends AsyncTaskLoader<List<Route>> {
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters().add(new MappingJackson2HttpMessageConverter());
         try {
-            responseEntity = restTemplate.getForEntity("http://192.168.1.133:8080/routes/all", Route[].class);
-//            responseEntity = restTemplate.getForEntity("http://172.31.11.110:8080/routes/all", Route[].class);
+//            responseEntity = restTemplate.getForEntity("http://192.168.1.133:8080/routes/all", Route[].class);
+            responseEntity = restTemplate.getForEntity(URL, Route[].class);
             routes = Arrays.asList(responseEntity.getBody());
         }
         catch (Exception e){

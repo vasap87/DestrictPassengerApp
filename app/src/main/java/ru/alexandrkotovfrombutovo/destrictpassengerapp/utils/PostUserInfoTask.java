@@ -16,7 +16,8 @@ import ru.alexandrkotovfrombutovo.destrictpassengerapp.models.UserInfo;
 
 public class PostUserInfoTask extends AsyncTask<UserInfo, Void, ResponseEntity<UserInfo>> {
 
-    private static final String URL = "http://192.168.1.133:8080/userservice/add";
+//    private static final String URL = "http://192.168.1.133:8080/userservice/add";
+    private static final String URL = "http://172.31.11.110:8080/userservice/add";
 
 
     @Override

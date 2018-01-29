@@ -6,14 +6,11 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.util.JsonReader;
 import android.util.Log;
 import android.view.Menu;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
+import android.view.MenuItem;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.util.UUID;
 
 import ru.alexandrkotovfrombutovo.destrictpassengerapp.R;
@@ -63,9 +60,19 @@ public class MainActivity extends Activity {
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main, menu);
 
-        return true;
+        return super.onCreateOptionsMenu(menu);
     }
 
+    @Override
+    public boolean onMenuItemSelected(int featureId, MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.settings:{
+                item.setIntent(new Intent(this, SettingsActivity.class));
+                break;
+            }
+        }
+        return super.onMenuItemSelected(featureId, item);
+    }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {

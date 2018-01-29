@@ -1,27 +1,25 @@
 package ru.alexandrkotovfrombutovo.destrictpassengerapp.fragments;
 
 
-import android.app.DialogFragment;
+
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
-import android.app.ListFragment;
 import android.app.LoaderManager;
+import android.content.Intent;
 import android.content.Loader;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ListView;
 
 import java.util.List;
-import java.util.UUID;
 
 import ru.alexandrkotovfrombutovo.destrictpassengerapp.R;
+import ru.alexandrkotovfrombutovo.destrictpassengerapp.activities.DetailActivity;
 import ru.alexandrkotovfrombutovo.destrictpassengerapp.adapter.RouteAdapter;
 import ru.alexandrkotovfrombutovo.destrictpassengerapp.customview.FloatingActionButton;
 import ru.alexandrkotovfrombutovo.destrictpassengerapp.models.Route;
@@ -29,12 +27,17 @@ import ru.alexandrkotovfrombutovo.destrictpassengerapp.models.UserInfo;
 import ru.alexandrkotovfrombutovo.destrictpassengerapp.utils.GetRouteListTask;
 import ru.alexandrkotovfrombutovo.destrictpassengerapp.utils.OnAddRouteListener;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * A simple {@link Fragment} subclass.
  */
 public class RouteListFragment extends SwipeRefreshListFragment implements OnAddRouteListener, LoaderManager.LoaderCallbacks<List<Route>> {
 
     public static final String TAG = "RouteListFragment";
+    public static final String EXTRA_USER = "CurrentUser";
+    public static final String EXTRA_ROUTE = "CurrentRoute";
+    private static final int REQUEST_CHANGE_ROUTE = 1;
 
     private RouteAdapter adapter;
     private UserInfo mCurrentUser;
@@ -56,11 +59,9 @@ public class RouteListFragment extends SwipeRefreshListFragment implements OnAdd
                 .withMargins(0, 0, 16, 16)
                 .create();
         fabButton.setOnClickListener(v -> {
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            RouteFragment routeFragment = RouteFragment.newInstance(mCurrentUser);
-            routeFragment.setTargetFragment(this,1);
-            ft.replace(R.id.content_frame, routeFragment)
-                    .commit();
+            Intent routeIntent = new Intent(getActivity(), DetailActivity.class);
+            routeIntent.putExtra(EXTRA_USER, mCurrentUser);
+            startActivityForResult(routeIntent, REQUEST_CHANGE_ROUTE);
         });
         setEmptyText(getResources().getText(R.string.noDataInList));
         adapter = new RouteAdapter(getActivity());
@@ -81,11 +82,9 @@ public class RouteListFragment extends SwipeRefreshListFragment implements OnAdd
         super.onListItemClick(l, v, position, id);
         Route route = (Route) l.getItemAtPosition(position);
         if(route!=null){
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
-            RouteFragment routeFragment = new RouteFragment();
-            routeFragment.setRoute(route);
-            ft.replace(R.id.content_frame, routeFragment)
-                    .commit();
+            Intent routeIntent = new Intent(getActivity(), DetailActivity.class);
+            routeIntent.putExtra(EXTRA_ROUTE, route);
+            startActivityForResult(routeIntent, REQUEST_CHANGE_ROUTE);
         }
     }
 
@@ -137,5 +136,14 @@ public class RouteListFragment extends SwipeRefreshListFragment implements OnAdd
 
     public void setUserInfo(UserInfo userInfo) {
         this.mCurrentUser = userInfo;
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(data==null) return;
+        if(resultCode==RESULT_OK && requestCode ==REQUEST_CHANGE_ROUTE){
+            initRefresh();
+        }
+
     }
 }

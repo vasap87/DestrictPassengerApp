@@ -4,6 +4,7 @@ package ru.alexandrkotovfrombutovo.destrictpassengerapp.fragments;
 import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.content.Intent;
 import android.os.Bundle;
 
 import android.util.Log;
@@ -31,6 +32,8 @@ import ru.alexandrkotovfrombutovo.destrictpassengerapp.utils.OnAddRouteListener;
 import ru.alexandrkotovfrombutovo.destrictpassengerapp.utils.OnDateTimeChangeListener;
 import ru.alexandrkotovfrombutovo.destrictpassengerapp.utils.PostRouteTask;
 
+import static android.app.Activity.RESULT_OK;
+
 /**
  * A simple {@link DialogFragment} subclass.
  */
@@ -41,13 +44,6 @@ public class RouteFragment extends Fragment implements View.OnClickListener, OnD
         // Required empty public constructor
     }
 
-    public static RouteFragment newInstance(UserInfo userInfo){
-        RouteFragment fragment = new RouteFragment();
-        Bundle args = new Bundle();
-        args.putSerializable(USER_TAG, userInfo);
-        fragment.setArguments(args);
-        return fragment;
-    }
 
     public static final String USER_TAG = "CURRENT-USER";
     public static final String TAG = "RouteDialogFragment";
@@ -61,9 +57,13 @@ public class RouteFragment extends Fragment implements View.OnClickListener, OnD
     private Route mRoute;
     private UserInfo mCurrentUser;
 
-    private OnAddRouteListener targetListener;
+    //private OnAddRouteListener targetListener;
     public void setRoute(Route mRoute) {
         this.mRoute = mRoute;
+    }
+
+    public void setCurrentUser(UserInfo mCurrentUser) {
+        this.mCurrentUser = mCurrentUser;
     }
 
     @Override
@@ -81,13 +81,11 @@ public class RouteFragment extends Fragment implements View.OnClickListener, OnD
     public void onCreate(Bundle savedInstanceState) {
         Log.i(TAG,"onCreate");
         super.onCreate(savedInstanceState);
-        try {
-            Bundle properties = getArguments();
-            mCurrentUser = (UserInfo) properties.getSerializable("CURRENT-USER");
-            targetListener = (OnAddRouteListener) getTargetFragment();
-        }catch (ClassCastException e){
-            throw new ClassCastException("Calling Fragment must implement OnAddFriendListener");
-        }
+//        try {
+//            //targetListener = (OnAddRouteListener) getTargetFragment();
+//        }catch (ClassCastException e){
+//            throw new ClassCastException("Calling Fragment must implement OnAddFriendListener");
+//        }
     }
 
     @Override
@@ -142,7 +140,7 @@ public class RouteFragment extends Fragment implements View.OnClickListener, OnD
                     if (routeResponseEntity != null) {
                         Route result = routeResponseEntity.getBody();
                         if (result != null) {
-                            targetListener.onAddRouteListener(result);
+                            //targetListener.onAddRouteListener(result);
                             Toast.makeText(getActivity(), "Route added", Toast.LENGTH_LONG).show();
                         }
                     } else {
@@ -153,11 +151,12 @@ public class RouteFragment extends Fragment implements View.OnClickListener, OnD
                 } catch (ExecutionException e) {
                     Toast.makeText(getActivity(), "Not added: " + e.getMessage(), Toast.LENGTH_LONG).show();
                 }
-                dismiss(this);
+                getActivity().setResult(RESULT_OK, new Intent());
+                getActivity().finish();
                 break;
             }
             case R.id.cancelButton: {
-                dismiss(this);
+                getActivity().finish();
                 break;
             }
             case R.id.switchButton:{
@@ -174,14 +173,14 @@ public class RouteFragment extends Fragment implements View.OnClickListener, OnD
 
     }
 
-    private void dismiss(Fragment fragment) {
-
-        FragmentManager fragmentManager = getFragmentManager();
-        Fragment previous = fragment.getTargetFragment();
-        fragmentManager.beginTransaction()
-                .replace(R.id.content_frame, previous)
-                .commit();
-    }
+//    private void dismiss(Fragment fragment) {
+//
+//        FragmentManager fragmentManager = getFragmentManager();
+//        Fragment previous = fragment.getTargetFragment();
+//        fragmentManager.beginTransaction()
+//                .replace(R.id.content_frame, previous)
+//                .commit();
+//    }
 
     @Override
     public void onDateTimeChange(Calendar calendar) {
