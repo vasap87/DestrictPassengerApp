@@ -14,6 +14,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TimePicker;
 
+import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -92,13 +93,13 @@ public class DateTimeEditDialogFragment extends DialogFragment implements View.O
                 new DatePickerDialog(getActivity(),dateSetListener,
                         mCalendar.get(Calendar.YEAR),
                         mCalendar.get(Calendar.MONTH),
-                        mCalendar.get(Calendar.DAY_OF_MONTH))
+                        mCalendar.get(Calendar.DATE))
                         .show();
                 break;
             }
             case R.id.timeText:{
                 new TimePickerDialog(getActivity(), timeSetListener,
-                        mCalendar.get(Calendar.HOUR),
+                        mCalendar.get(Calendar.HOUR_OF_DAY),
                         mCalendar.get(Calendar.MINUTE),
                         true)
                         .show();
@@ -113,18 +114,16 @@ public class DateTimeEditDialogFragment extends DialogFragment implements View.O
     };
 
     private TimePickerDialog.OnTimeSetListener timeSetListener = (timePicker, hourOfDay, minute) -> {
-        mCalendar.set(Calendar.HOUR,hourOfDay);
+        mCalendar.set(Calendar.HOUR_OF_DAY,hourOfDay);
         mCalendar.set(Calendar.MINUTE,minute);
         setTimeInEditText();
     };
 
     private void setDateInEditText() {
-        SimpleDateFormat format = new SimpleDateFormat("dd:MM:yyyy");
-        mDateText.setText(format.format(mCalendar.getTime()));
+        mDateText.setText(DateFormat.getDateInstance().format(mCalendar.getTime()));
     }
 
     private void setTimeInEditText() {
-        SimpleDateFormat format = new SimpleDateFormat("HH:mm");
-        mTimeText.setText(format.format(mCalendar.getTime()));
+        mTimeText.setText(DateFormat.getTimeInstance().format(mCalendar.getTime()));
     }
 }

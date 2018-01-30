@@ -4,9 +4,7 @@ package ru.alexandrkotovfrombutovo.destrictpassengerapp.fragments;
 import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.Context;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.telephony.PhoneNumberFormattingTextWatcher;
 import android.util.Log;
@@ -18,16 +16,12 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
 import org.springframework.http.ResponseEntity;
 
 import java.util.concurrent.ExecutionException;
 
 import ru.alexandrkotovfrombutovo.destrictpassengerapp.R;
-import ru.alexandrkotovfrombutovo.destrictpassengerapp.activities.MainActivity;
 import ru.alexandrkotovfrombutovo.destrictpassengerapp.models.UserInfo;
-import ru.alexandrkotovfrombutovo.destrictpassengerapp.utils.JsonUtil;
 import ru.alexandrkotovfrombutovo.destrictpassengerapp.utils.PostUserInfoTask;
 
 /**
@@ -68,18 +62,11 @@ public class RegistrationFragment extends Fragment {
             UserInfo userInfo = new UserInfo();
             userInfo.setUuid(mUserUuid);
             userInfo.setPhone(String.valueOf(mPhoneNumberEditText.getText()));
-            PostUserInfoTask task = new PostUserInfoTask();
+            PostUserInfoTask task = new PostUserInfoTask(getActivity());
             task.execute(userInfo);
             try {
                 ResponseEntity<UserInfo> entityUserInfo = task.get();
-                if (entityUserInfo != null) {
-                    userInfo = entityUserInfo.getBody();
-                    SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
-                    SharedPreferences.Editor editor = preferences.edit();
-                    editor.putString(MainActivity.USER_JSON, JsonUtil.getInstance().serialization(userInfo));
-                    editor.putBoolean(MainActivity.IS_REGISTER_TAG, true);
-                    editor.apply();
-
+                if(entityUserInfo!=null){
                     FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
                     RouteListFragment fragment = new RouteListFragment();
                     fragment.setUserInfo(userInfo);
@@ -88,12 +75,10 @@ public class RegistrationFragment extends Fragment {
                 } else {
                     Toast.makeText(getActivity(), "connection timeout", Toast.LENGTH_SHORT).show();
                 }
-            } catch (JsonProcessingException e) {
-                Log.i(TAG, e.getMessage());
             } catch (InterruptedException e) {
                 Log.i(TAG, e.getMessage());
             } catch (ExecutionException e) {
-                Log.i(TAG, e.getMessage());
+                e.printStackTrace();
             }
 
         });

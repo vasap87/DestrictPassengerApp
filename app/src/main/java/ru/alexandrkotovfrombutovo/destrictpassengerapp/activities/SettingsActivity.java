@@ -1,33 +1,25 @@
 package ru.alexandrkotovfrombutovo.destrictpassengerapp.activities;
 
-import android.annotation.TargetApi;
-import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.res.Configuration;
-import android.media.Ringtone;
-import android.media.RingtoneManager;
-import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.preference.ListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.app.ActionBar;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
-import android.preference.RingtonePreference;
-import android.text.TextUtils;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+
 import ru.alexandrkotovfrombutovo.destrictpassengerapp.R;
+import ru.alexandrkotovfrombutovo.destrictpassengerapp.SeekBarPreference;
 import ru.alexandrkotovfrombutovo.destrictpassengerapp.models.UserInfo;
 import ru.alexandrkotovfrombutovo.destrictpassengerapp.utils.JsonUtil;
 import ru.alexandrkotovfrombutovo.destrictpassengerapp.utils.PostUserInfoTask;
 
 import java.io.IOException;
-import java.util.List;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -42,8 +34,9 @@ import java.util.List;
  */
 public class SettingsActivity extends PreferenceActivity {
 
-    private SettingsFragment fragment;
-    private SharedPreferences preferences;
+    private SettingsFragment mFragment;
+    private UserInfo mUserInfo;
+    private SharedPreferences mPreferences;
     private final static String TAG = "SettingsActivity";
 
 
@@ -51,26 +44,39 @@ public class SettingsActivity extends PreferenceActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setupActionBar();
-        fragment = new SettingsFragment();
+        mFragment = new SettingsFragment();
         getFragmentManager()
                 .beginTransaction()
-                .replace(android.R.id.content, fragment)
+                .replace(android.R.id.content, mFragment)
                 .commit();
         getFragmentManager().executePendingTransactions();
-        preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        mPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         try {
-            UserInfo userInfo = JsonUtil.getInstance().deserialization(preferences.getString(MainActivity.USER_JSON, null), UserInfo.class);
-            if (userInfo != null) {
-                Preference userName = fragment.findPreference("user_name");
-                userName.setSummary(userInfo.getName());
-                Preference userPhone = fragment.findPreference("user_phone");
-                userPhone.setSummary(userInfo.getPhone());
+            mUserInfo = JsonUtil.getInstance().deserialization(mPreferences.getString(MainActivity.USER_JSON, null), UserInfo.class);
+            if (mUserInfo != null) {
+                Preference userName = mFragment.findPreference("user_name");
+                if (mUserInfo.getName() != null) {
+                    userName.setSummary(mUserInfo.getName());
+                }
+                userName.setOnPreferenceChangeListener((preference, newValue) -> {
+                    userName.setSummary((CharSequence) newValue);
+                    mUserInfo.setName(String.valueOf(newValue));
+                    return true;
+                });
+                Preference userPhone = mFragment.findPreference("user_phone");
+                userPhone.setSummary(mUserInfo.getPhone());
+                userPhone.setSelectable(false);
             }
         } catch (IOException e) {
             Log.d(TAG, e.fillInStackTrace().toString());
         }
 
+        Preference duration = mFragment.findPreference("minuteToHideRow");
+        duration.setOnPreferenceChangeListener((preference, newValue) -> {
+            duration.setSummary("Hide row after "+ newValue + " min");
+            return true;
+        });
     }
 
     /**
@@ -98,16 +104,39 @@ public class SettingsActivity extends PreferenceActivity {
 
     @Override
     public void onBackPressed() {
-        try {
-            UserInfo userInfo = JsonUtil.getInstance().deserialization(preferences.getString(MainActivity.USER_JSON, null), UserInfo.class);
-            if (userInfo != null) {
-                userInfo.setName(preferences.getString("user_name", null));
+        postUserInfo();
+        finish();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home: {
+                postUserInfo();
+                finish();
+                return true;
             }
-            //update entity on server
-            PostUserInfoTask task = new PostUserInfoTask();
-            task.execute(userInfo);
-        } catch (IOException e) {
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        setupActionBar();
+        return true;
+    }
+
+    private void postUserInfo() {
+        SharedPreferences.Editor editor = mPreferences.edit();
+        try {
+            editor.putString(MainActivity.USER_JSON, JsonUtil.getInstance().serialization(mUserInfo));
+        } catch (JsonProcessingException e) {
             Log.d(TAG, e.fillInStackTrace().toString());
         }
+        editor.apply();
+        //update entity on server
+        new PostUserInfoTask(this).execute(mUserInfo);
     }
 }

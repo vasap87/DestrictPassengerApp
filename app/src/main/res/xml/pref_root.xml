@@ -5,7 +5,6 @@
         android:title="User settings">
 
         <EditTextPreference
-            android:editable="false"
             android:key="user_phone"
             android:summary="@string/pref_user_phone_summary"
             android:title="@string/pref_user_phone" />
@@ -16,8 +15,9 @@
 
     </PreferenceCategory>
 
-    <EditTextPreference
+    <ru.alexandrkotovfrombutovo.destrictpassengerapp.SeekBarPreference
         android:key="minuteToHideRow"
+        android:defaultValue="5"
         android:summary="@string/minuteToHideRow"
         android:title="Duration" />
 
