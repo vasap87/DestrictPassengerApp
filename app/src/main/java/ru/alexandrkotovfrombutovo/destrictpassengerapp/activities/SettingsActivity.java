@@ -2,6 +2,7 @@ package ru.alexandrkotovfrombutovo.destrictpassengerapp.activities;
 
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.app.ActionBar;
@@ -14,12 +15,13 @@ import android.view.MenuItem;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 import ru.alexandrkotovfrombutovo.destrictpassengerapp.R;
-import ru.alexandrkotovfrombutovo.destrictpassengerapp.SeekBarPreference;
+import ru.alexandrkotovfrombutovo.destrictpassengerapp.customview.SeekBarPreference;
 import ru.alexandrkotovfrombutovo.destrictpassengerapp.models.UserInfo;
 import ru.alexandrkotovfrombutovo.destrictpassengerapp.utils.JsonUtil;
 import ru.alexandrkotovfrombutovo.destrictpassengerapp.utils.PostUserInfoTask;
 
 import java.io.IOException;
+import java.util.Arrays;
 
 /**
  * A {@link PreferenceActivity} that presents a set of application settings. On
@@ -37,6 +39,7 @@ public class SettingsActivity extends PreferenceActivity {
     private SettingsFragment mFragment;
     private UserInfo mUserInfo;
     private SharedPreferences mPreferences;
+    private boolean isChangedUserInfo;
     private final static String TAG = "SettingsActivity";
 
 
@@ -60,6 +63,7 @@ public class SettingsActivity extends PreferenceActivity {
                     userName.setSummary(mUserInfo.getName());
                 }
                 userName.setOnPreferenceChangeListener((preference, newValue) -> {
+                    isChangedUserInfo = true;
                     userName.setSummary((CharSequence) newValue);
                     mUserInfo.setName(String.valueOf(newValue));
                     return true;
@@ -72,7 +76,8 @@ public class SettingsActivity extends PreferenceActivity {
             Log.d(TAG, e.fillInStackTrace().toString());
         }
 
-        Preference duration = mFragment.findPreference("minuteToHideRow");
+        SeekBarPreference duration = (SeekBarPreference) mFragment.findPreference("minuteToHideRow");
+        duration.setSummary("Hide row after "+ duration.getProgress() + " min");
         duration.setOnPreferenceChangeListener((preference, newValue) -> {
             duration.setSummary("Hide row after "+ newValue + " min");
             return true;
@@ -104,7 +109,7 @@ public class SettingsActivity extends PreferenceActivity {
 
     @Override
     public void onBackPressed() {
-        postUserInfo();
+        if(isChangedUserInfo)postUserInfo();
         finish();
     }
 
@@ -112,7 +117,7 @@ public class SettingsActivity extends PreferenceActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case android.R.id.home: {
-                postUserInfo();
+                if(isChangedUserInfo)postUserInfo();
                 finish();
                 return true;
             }

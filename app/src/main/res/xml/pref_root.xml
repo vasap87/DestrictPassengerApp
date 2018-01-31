@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <PreferenceCategory
         android:key="user_settings"
         android:title="User settings">
@@ -15,19 +16,20 @@
 
     </PreferenceCategory>
 
-    <ru.alexandrkotovfrombutovo.destrictpassengerapp.SeekBarPreference
+    <ru.alexandrkotovfrombutovo.destrictpassengerapp.customview.SeekBarPreference
         android:key="minuteToHideRow"
         android:defaultValue="5"
+        android:minLevel = "0"
+        android:maxLevel = "60"
         android:summary="@string/minuteToHideRow"
         android:title="Duration" />
 
-    <ListPreference
-        android:key="location"
-        android:title="@string/pref_location"
-        android:summary="@string/pref_location_summary"
-        android:entries="@array/pref_location_enties"
+    <MultiSelectListPreference
+        android:entries="@array/pref_location_entries"
         android:entryValues="@array/pref_location_values"
-        android:defaultValue="0"/>
+        android:key="location"
+        android:summary="@string/pref_location_summary"
+        android:title="@string/pref_location_title" />
 
 
 </PreferenceScreen>

@@ -39,11 +39,12 @@
     <string name="pref_user_phone_summary">Phone number</string>
     <string name="pref_user_name_summary">Name</string>
     <string name="pref_user_name">Login or username</string>
-    <string name="pref_location">Location</string>
+    <string name="pref_location_title">Location</string>
     <string name="pref_location_summary">Location to find route</string>
+    <string name="pref_duration_prefix">min</string>
 
 
-    <string-array name="pref_location_enties">
+    <string-array name="pref_location_entries">
         <item>Бутовские Аллеи</item>
         <item>Бунинский</item>
         <item>Бунинские луга</item>
