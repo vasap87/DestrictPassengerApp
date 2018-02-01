@@ -1,5 +1,6 @@
 package ru.alexandrkotovfrombutovo.destrictpassengerapp.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
@@ -25,6 +26,7 @@ public class PostUserInfoTask extends AsyncTask<UserInfo, Void, ResponseEntity<U
     //    private static final String URL = "http://192.168.1.133:8080/userservice/add";
     private static final String URL = "http://172.31.11.110:8080/userservice/add";
 
+    @SuppressLint("StaticFieldLeak")
     private Context context;
 
     public PostUserInfoTask(Context context) {

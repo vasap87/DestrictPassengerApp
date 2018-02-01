@@ -5,8 +5,10 @@ import android.app.DialogFragment;
 import android.app.Fragment;
 import android.app.FragmentManager;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -162,6 +164,8 @@ public class RouteFragment extends Fragment implements View.OnClickListener, OnD
         if(mRoute ==null) {
             isNewRoute = true;
             mRoute = new Route();
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            mRoute.setLocation(Integer.valueOf(preferences.getString("location", "0")));
         }
         mRoute.setActive(!mIsDoneChB.isChecked());
         mRoute.setFromRoute(String.valueOf(mFromRoute.getText()));
@@ -169,7 +173,7 @@ public class RouteFragment extends Fragment implements View.OnClickListener, OnD
         if (mRoute.getUser() == null ) mRoute.setUser(mCurrentUser);
         mRoute.setStartDateTime(mCalendar.getTimeInMillis());
         mRoute.setDriver(mSwitchDriver.isChecked());
-        PostRouteTask task = new PostRouteTask();
+        PostRouteTask task = new PostRouteTask(getActivity());
         task.execute(mRoute);
         try {
             ResponseEntity<Route> routeResponseEntity = task.get();

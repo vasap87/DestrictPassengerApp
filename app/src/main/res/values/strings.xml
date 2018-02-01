@@ -41,7 +41,10 @@
     <string name="pref_user_name">Login or username</string>
     <string name="pref_location_title">Location</string>
     <string name="pref_location_summary">Location to find route</string>
-    <string name="pref_duration_prefix">min</string>
+    <string name="pref_duration_prefix"> min </string>
+    <string name="from_preview">from: </string>
+    <string name="preview_after">after </string>
+    <string name="preview_to">to: </string>
 
 
     <string-array name="pref_location_entries">
@@ -53,5 +56,9 @@
         <item>0</item>
         <item>1</item>
         <item>2</item>
+    </string-array>
+
+    <string-array name="pref_location_values_def">
+        <item>0</item>
     </string-array>
 </resources>

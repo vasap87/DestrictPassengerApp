@@ -24,12 +24,13 @@
         android:summary="@string/minuteToHideRow"
         android:title="Duration" />
 
-    <MultiSelectListPreference
+    <ListPreference
         android:entries="@array/pref_location_entries"
         android:entryValues="@array/pref_location_values"
         android:key="location"
         android:summary="@string/pref_location_summary"
-        android:title="@string/pref_location_title" />
+        android:title="@string/pref_location_title"
+        android:defaultValue="0"/>
 
 
 </PreferenceScreen>

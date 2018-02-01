@@ -23,6 +23,16 @@ public class Route implements Serializable{
     private Boolean isActive;
     @JsonProperty("isDriver")
     private Boolean isDriver;
+    @JsonProperty("location")
+    private Integer location;
+
+    public Integer getLocation() {
+        return location;
+    }
+
+    public void setLocation(Integer location) {
+        this.location = location;
+    }
 
     public Boolean getDriver() {
         return isDriver;

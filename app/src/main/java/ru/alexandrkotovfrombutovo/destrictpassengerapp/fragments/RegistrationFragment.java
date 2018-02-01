@@ -67,6 +67,7 @@ public class RegistrationFragment extends Fragment {
             try {
                 ResponseEntity<UserInfo> entityUserInfo = task.get();
                 if(entityUserInfo!=null){
+                    userInfo = entityUserInfo.getBody();
                     FragmentTransaction transaction = getActivity().getFragmentManager().beginTransaction();
                     RouteListFragment fragment = new RouteListFragment();
                     fragment.setUserInfo(userInfo);
