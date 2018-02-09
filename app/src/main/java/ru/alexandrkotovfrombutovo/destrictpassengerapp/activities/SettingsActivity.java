@@ -1,7 +1,9 @@
 package ru.alexandrkotovfrombutovo.destrictpassengerapp.activities;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.ListPreference;
 import android.preference.MultiSelectListPreference;
 import android.preference.Preference;
 import android.preference.PreferenceActivity;
@@ -77,12 +79,21 @@ public class SettingsActivity extends PreferenceActivity {
         }
 
         SeekBarPreference duration = (SeekBarPreference) mFragment.findPreference("minuteToHideRow");
-        duration.setSummary("Hide row after "+ duration.getProgress() + " min");
+        duration.setSummary("Hide route after "+ mPreferences.getInt("minuteToHideRow", 0) + " min");
         duration.setOnPreferenceChangeListener((preference, newValue) -> {
             duration.setSummary("Hide row after "+ newValue + " min");
             return true;
         });
+
+        ListPreference locationPreference = (ListPreference) mFragment.findPreference("location");
+        String[] locations = getResources().getStringArray(R.array.pref_location_entries);
+        locationPreference.setSummary(locations[Integer.parseInt(mPreferences.getString("location", locations[0]))]);
+        locationPreference.setOnPreferenceChangeListener((preference, newValue) -> {
+            locationPreference.setSummary(locations[Integer.parseInt((String) newValue)]);
+            return true;
+        });
     }
+
 
     /**
      * Set up the {@link android.app.ActionBar}, if the API is available.

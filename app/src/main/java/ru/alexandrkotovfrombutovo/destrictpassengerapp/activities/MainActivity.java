@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.util.UUID;
 
 import ru.alexandrkotovfrombutovo.destrictpassengerapp.R;
+import ru.alexandrkotovfrombutovo.destrictpassengerapp.fragments.PhoneAuthFirebaseFragment;
 import ru.alexandrkotovfrombutovo.destrictpassengerapp.fragments.RegistrationFragment;
 import ru.alexandrkotovfrombutovo.destrictpassengerapp.fragments.RouteListFragment;
 import ru.alexandrkotovfrombutovo.destrictpassengerapp.models.UserInfo;
@@ -46,8 +47,9 @@ public class MainActivity extends Activity {
             }
         }else{
             FragmentTransaction transaction = getFragmentManager().beginTransaction();
-            RegistrationFragment registrationFragment = new RegistrationFragment();
-            registrationFragment.setUserUuid(UUID.randomUUID().toString());
+//            RegistrationFragment registrationFragment = new RegistrationFragment();
+//            registrationFragment.setUserUuid(UUID.randomUUID().toString());
+            PhoneAuthFirebaseFragment registrationFragment = new PhoneAuthFirebaseFragment();
             transaction.replace(R.id.content_frame, registrationFragment);
             transaction.commit();
         }
